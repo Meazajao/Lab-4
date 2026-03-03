@@ -2,117 +2,27 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Holo Dice</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dice roll</title>
+
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
-  <div class="scanlines"></div>
+  <h1>Dice + Chat</h1>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="mark">HD</div>
-      <div>
-        <div class="brand-title">Holo Dice Terminal</div>
-      </div>
-    </div>
+  <p>
+    Namn:
+    <input id="name" />
+    <button id="rollBtn">ROLL</button>
+  </p>
 
-    <div class="status">
-      <span class="led" id="led"></span>
-      <span id="statusText">CONNECTED</span>
-    </div>
-  </header>
+  <h2>Kastresultat</h2>
+  <ul id="rolls"></ul>
 
-  <main class="layout">
-    <!-- vänster controls -->
-    <section class="panel controls">
-      <div class="panel-head">
-        <h2>Kontrollpanel</h2>
-        <span class="tag">LIVE</span>
-      </div>
-
-      <label class="label" for="name">Spelarnamn</label>
-      <input id="name" class="input" placeholder="Skriv ditt namn..." maxlength="24" />
-
-      <div class="btnrow">
-        <button id="rollBtn" class="btn primary">ROLL</button>
-        <button id="clearBtn" class="btn ghost" title="Rensar UI (inte DB)">CLEAR UI</button>
-      </div>
-
-      <div class="mini">
-        <div class="mini-box">
-          <div class="mini-k">Senaste kast</div>
-          <div class="mini-v" id="lastRoll">—</div>
-        </div>
-        <div class="mini-box">
-          <div class="mini-k">Din total</div>
-          <div class="mini-v" id="myTotal">—</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- center roll panelen -->
-    <section class="panel stage">
-      <div class="panel-head">
-        <h2>Dice Output</h2>
-        <span class="tag subtle">VISUAL</span>
-      </div>
-
-      <div class="roll-area">
-        <div class="roll-number" id="rollNumber">—</div>
-        <div class="roll-label">YOU ROLLED</div>
-
-        <div class="dice2d" id="dice2d" aria-label="dice">
-          <span class="pip tl"></span>
-          <span class="pip tr"></span>
-          <span class="pip ml"></span>
-          <span class="pip mr"></span>
-          <span class="pip bl"></span>
-          <span class="pip br"></span>
-          <span class="pip c"></span>
-        </div>
-
-        <div class="pulse" id="pulse"></div>
-      </div>
-    </section>
-
-    <!-- höger live feed -->
-    <section class="panel right">
-      <div class="panel-head">
-        <h2>Realtime</h2>
-        <span class="tag">STREAM</span>
-      </div>
-
-      <div class="split">
-        <div class="box">
-          <div class="box-head">Leaderboard</div>
-          <div class="list" id="leaderboard"></div>
-        </div>
-
-        <div class="box">
-          <div class="box-head">Live Feed</div>
-          <div class="list feed" id="results"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- chaten -->
-    <section class="panel chat">
-      <div class="panel-head">
-        <h2>Chat</h2>
-        <span class="tag subtle">COMMS</span>
-      </div>
-
-      <div class="chat-log" id="chat"></div>
-
-      <div class="chat-row">
-        <input id="commentInput" class="input" placeholder="Skriv kommentar..." maxlength="160" />
-        <button id="sendBtn" class="btn primary">SEND</button>
-      </div>
-    </section>
-  </main>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <h2>Kommentarer</h2>
+  <input id="commentInput" />
+  <button id="sendBtn">SEND</button>
+  <ul id="chat"></ul>
 </body>
 </html>

@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server, {
+const io = new Server(server, { 
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
@@ -20,14 +20,13 @@ app.use(express.static("public"));
 mongoose
   .connect("mongodb://127.0.0.1:27017/diceDB")
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log("MongoDB error:", err));
-
+  .catch((err) => console.log("MongoDB error:", err));  
 // Schema + Model 
 const diceSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true },
   roll: { type: Number, required: true, min: 1, max: 6 },
   total: { type: Number, required: true, min: 0 },
-  createdAt: { type: Date, default: Date.now },
+  createdAt: { type: Date, default: Date.now }, 
 });
 
 const Dice = mongoose.model("Dice", diceSchema);
@@ -38,13 +37,13 @@ app.get("/api/dice", async (req, res) => {
     const rolls = await Dice.find().sort({ createdAt: -1 });
     res.json(rolls);
   } catch (err) {
-    res.status(500).json({ error: "Could not fetch dice rolls" });
+    res.status(500).json({ error: "Could not fetch dice rolls" }); // för vg har jag en express endpoint som hämtar alla sparade kast frå mongogoDB och returnerar dem som JSON
   }
 });
 
-//  Håller koll på totalsumma per socket ,undviker namn krockar
+
 const playerTotalsBySocket = new Map(); 
-const playerNameBySocket = new Map();   
+const playerNameBySocket = new Map();    
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
@@ -56,14 +55,14 @@ io.on("connection", (socket) => {
 
       if (!name) return;                 
       if (!Number.isInteger(roll)) return;
-      if (roll < 1 || roll > 6) return;  
+      if (roll < 1 || roll > 6) return;
 
 
       playerNameBySocket.set(socket.id, name);
 
       const prevTotal = playerTotalsBySocket.get(socket.id) || 0;
       const newTotal = prevTotal + roll;
-      playerTotalsBySocket.set(socket.id, newTotal);
+      playerTotalsBySocket.set(socket.id, newTotal); 
 
       // spara i databasen
       const newRoll = await Dice.create({
@@ -82,8 +81,7 @@ io.on("connection", (socket) => {
     } catch (err) {
       console.log("rollDice error:", err);
     }
-  });
-
+  }); 
   socket.on("comment", (data) => {
     const name = (data?.name || "").trim();
     const comment = (data?.comment || "").trim();
@@ -94,13 +92,12 @@ io.on("connection", (socket) => {
       comment,
       createdAt: new Date(),
     });
-  });
-
+  }); 
   socket.on("disconnect", () => {
     playerTotalsBySocket.delete(socket.id);
     playerNameBySocket.delete(socket.id);
     console.log("User disconnected:", socket.id);
-  });
+  }); 
 });
 
 server.listen(3000, () => {
